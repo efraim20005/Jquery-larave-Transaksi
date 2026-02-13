@@ -14,6 +14,34 @@
     <div class="container">
         <a class="navbar-brand" href="#">Penjualan App</a>
 
+        @if(auth()->user()->role == 'admin')
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{route('products.index')}}">Produk</a>
+
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('categories.index')}}">Kategori</a>
+                </li>
+            </ul>
+        </div>
+
+        @endif
+
+        @if(auth()->user()->role == 'kasir')
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{route('transactions.index')}}">Transaksi</a>
+                    </li>
+                </ul>
+            </div>
+        @endif
+
         <div class="ms-auto">
             @auth
                 <span class="text-white me-3">

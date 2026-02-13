@@ -15,7 +15,7 @@ class TransactionController extends Controller
     public function index()
     {
         $products = Product::all();
-        return view('kasir.transactions.index', compact('products'));
+        return view('backend.kasir.transactions.index', compact('products'));
     }
 
     public function store(Request $request)
@@ -65,7 +65,7 @@ class TransactionController extends Controller
 
         $totalAll = $transactions->sum('total');
 
-        return view('kasir.history.index', compact('transactions', 'totalAll'));
+        return view('backend.kasir.history.index', compact('transactions', 'totalAll'));
     }
 
 
@@ -74,7 +74,7 @@ class TransactionController extends Controller
         $transaction = Transaction::with('details.product', 'user')
             ->findOrFail($id);
 
-        return view('kasir.history.show', compact('transaction'));
+        return view('backend.kasir.history.show', compact('transaction'));
     }
 
     public function printPdf($id)
@@ -82,7 +82,7 @@ class TransactionController extends Controller
         $transaction = Transaction::with('details.product', 'user')
             ->findOrFail($id);
 
-        $pdf = Pdf::loadView('kasir.history.pdf', compact('transaction'));
+        $pdf = Pdf::loadView('backend.kasir.history.pdf', compact('transaction'));
 
         return $pdf->download('struk-transaksi-'.$transaction->id.'.pdf');
     }

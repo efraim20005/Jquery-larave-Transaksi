@@ -37,12 +37,11 @@
     </table>
 
 
-    <!-- CREATE MODAL -->
+    {{-- ================= CREATE MODAL ================= --}}
     <div class="modal fade" id="createModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="createForm">
-                    @csrf
                     <div class="modal-header">
                         <h5>Tambah Product</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -70,12 +69,11 @@
     </div>
 
 
-    <!-- EDIT MODAL -->
+    {{-- ================= EDIT MODAL ================= --}}
     <div class="modal fade" id="editModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="editForm">
-                    @csrf
                     <div class="modal-header">
                         <h5>Edit Product</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -106,10 +104,11 @@
 @endsection
 
 
+
 @section('scripts')
     <script>
 
-        /* ===== FUNCTION ROW ===== */
+        /* ================= FUNCTION ROW ================= */
         function makeRow(response, number){
             return `
 <tr id="row-${response.id}">
@@ -125,8 +124,9 @@
 </tr>`;
         }
 
-        /* ===== CREATE ===== */
-        $('#createForm').submit(function(e){
+
+        /* ================= CREATE ================= */
+        $(document).on('submit','#createForm',function(e){
             e.preventDefault();
 
             $.post("{{ route('products.store') }}", $(this).serialize(), function(res){
@@ -139,11 +139,13 @@
             });
         });
 
-        /* ===== EDIT SHOW ===== */
+
+        /* ================= SHOW EDIT ================= */
         $(document).on('click','.editBtn',function(){
+
             let id = $(this).data('id');
 
-            $.get("/admin/products/edit/"+id,function(data){
+            $.get("/admin/produk/edit/"+id,function(data){
                 $('#edit_id').val(data.id);
                 $('#edit_name').val(data.name);
                 $('#edit_price').val(data.price);
@@ -151,15 +153,17 @@
                 $('#edit_category').val(data.category_id);
                 $('#editModal').modal('show');
             });
+
         });
 
-        /* ===== UPDATE ===== */
-        $('#editForm').submit(function(e){
+
+        /* ================= UPDATE ================= */
+        $(document).on('submit','#editForm',function(e){
             e.preventDefault();
 
             let id = $('#edit_id').val();
 
-            $.post("/admin/products/update/"+id,{
+            $.post("/admin/produk/update/"+id,{
                 category_id: $('#edit_category').val(),
                 name: $('#edit_name').val(),
                 price: $('#edit_price').val(),
@@ -173,14 +177,15 @@
             });
         });
 
-        /* ===== DELETE ===== */
+
+        /* ================= DELETE ================= */
         $(document).on('click','.deleteBtn',function(){
 
-            if(confirm('Hapus data?')){
+            if(confirm('Hapus product?')){
                 let id = $(this).data('id');
 
                 $.ajax({
-                    url:"/admin/products/delete/"+id,
+                    url:"/admin/produk/delete/"+id,
                     type:"DELETE",
                     success:function(){
                         $("#row-"+id).remove();

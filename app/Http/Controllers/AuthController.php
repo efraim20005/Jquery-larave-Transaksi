@@ -22,13 +22,13 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
 
             $request->session()->regenerate();
-
+            // disini saya menggunakan metode role login dengan data sendiri
             if (Auth::user()->role == 'admin') {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('products.index');
             }
 
             if (Auth::user()->role == 'kasir') {
-                return redirect()->route('kasir.dashboard');
+                return redirect()->route('transactions.index');
             }
         }
 

@@ -13,14 +13,15 @@ class ProductController extends Controller
         $products = Product::with('category')->latest()->get();
         $categories = Category::all();
 
-        return view('admin.products.index', compact('products','categories'));
+        return view('backend.admin.products.index', compact('products','categories'));
+        // kalau kitamenggunakan langsung return untuk js,maka yang akan tampil jika menggunakan bootstrap menampilkan data dalam bentuk js
     }
 
     public function store(Request $request)
     {
         $product = Product::create($request->all());
 
-        $product->load('category'); // penting!
+        $product->load('category');
 
         return response()->json([
             'id' => $product->id,
