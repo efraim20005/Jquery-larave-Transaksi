@@ -12,7 +12,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#">Penjualan App</a>
+        <a class="navbar-brand" href="#">App</a>
 
         @if(auth()->user()->role == 'admin')
 

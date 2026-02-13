@@ -21,12 +21,11 @@
             <tbody id="categoryTable">
             @foreach($categories as $key => $category)
                 <tr id="row-{{ $category->id }}">
-                    <td>{{ $key+1 }}</td>
+                    <td class="no">{{ $key+1 }}</td>
                     <td class="nama">{{ $category->name }}</td>
                     <td>
                         <button class="btn btn-warning btn-sm editBtn"
-                                data-id="{{ $category->id }}"
-                                data-name="{{ $category->name }}">
+                                data-id="{{ $category->id }}">
                             Edit
                         </button>
 
@@ -47,6 +46,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="createForm">
+                    @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Tambah Kategori</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -70,6 +70,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="editForm">
+                    @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Kategori</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -95,12 +96,36 @@
 @section('scripts')
     <script>
 
-        // ================= CREATE =================
-        $(document).on('submit','#createForm',function(e){
+        let nomor = {{ count($categories) + 1 }};
+
+        // ================= CREATE SUPER CEPAT =================
+        $('#createForm').submit(function(e){
             e.preventDefault();
 
-            $.post("{{ route('categories.store') }}", $(this).serialize(), function(){
-                location.reload(); // reload supaya nomor urut rapi
+            $.post("{{ route('categories.store') }}", $(this).serialize(), function(res){
+
+                let name = $('input[name=name]').val();
+
+                $('#categoryTable').prepend(`
+            <tr id="row-${res.id}">
+                <td class="no">1</td>
+                <td class="nama">${name}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm editBtn" data-id="${res.id}">
+                        Edit
+                    </button>
+
+                    <button class="btn btn-danger btn-sm deleteBtn" data-id="${res.id}">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `);
+
+                resetNomor();
+
+                $('#createModal').modal('hide');
+                $('#createForm')[0].reset();
             });
         });
 
@@ -119,24 +144,26 @@
         });
 
 
-        // ================= UPDATE =================
-        $(document).on('submit','#editForm',function(e){
+        // ================= UPDATE TANPA RELOAD =================
+        $('#editForm').submit(function(e){
             e.preventDefault();
 
             let id = $('#edit_id').val();
+            let name = $('#edit_name').val();
 
             $.post("/admin/kategori/update/"+id,{
-                name: $('#edit_name').val()
+                _token: '{{ csrf_token() }}',
+                name: name
             },function(){
 
+                $("#row-"+id+" .nama").text(name);
                 $('#editModal').modal('hide');
-                location.reload();
-            });
 
+            });
         });
 
 
-        // ================= DELETE =================
+        // ================= DELETE SUPER CEPAT =================
         $(document).on('click','.deleteBtn',function(){
 
             let id = $(this).data('id');
@@ -146,18 +173,25 @@
                 $.ajax({
                     url: "/admin/kategori/delete/"+id,
                     type: "DELETE",
+                    data:{ _token:'{{ csrf_token() }}' },
                     success:function(){
-                        $("#row-"+id).remove();
-                    },
-                    error:function(xhr){
-                        console.log(xhr.responseText);
-                        alert('Delete gagal!');
+                        $("#row-"+id).fadeOut(300,function(){
+                            $(this).remove();
+                            resetNomor();
+                        });
                     }
                 });
 
             }
-
         });
+
+
+        // ================= RESET NOMOR OTOMATIS =================
+        function resetNomor(){
+            $('#categoryTable tr').each(function(index){
+                $(this).find('.no').text(index+1);
+            });
+        }
 
     </script>
 @endsection

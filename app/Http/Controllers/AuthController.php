@@ -22,23 +22,32 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
 
             $request->session()->regenerate();
-            // disini saya menggunakan metode role login dengan data sendiri
+
+            // CEK ROLE
             if (Auth::user()->role == 'admin') {
-                return redirect()->route('products.index');
+                return response()->json([
+                    'success' => true,
+                    'redirect' => route('products.index')
+                ]);
             }
 
             if (Auth::user()->role == 'kasir') {
-                return redirect()->route('transactions.index');
+                return response()->json([
+                    'success' => true,
+                    'redirect' => route('transactions.index')
+                ]);
             }
         }
 
-        return back()->with('error', 'Email atau Password salah');
+        return response()->json([
+            'success' => false,
+            'message' => 'Email atau Password salah'
+        ]);
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
