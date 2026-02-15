@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
@@ -23,7 +24,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 use App\Http\Controllers\CategoryController;
 
+
+
 Route::middleware(['auth','role:admin'])->group(function () {
+
+    Route::get('/dashboard',[LayoutController::class, 'index'])->name('dashboard');
 
 
     Route::get('/admin/produk', [ProductController::class, 'index'])->name('products.index');

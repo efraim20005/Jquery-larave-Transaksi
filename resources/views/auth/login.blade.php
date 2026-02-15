@@ -12,7 +12,7 @@
         <div class="col-md-4">
             <div class="card shadow">
                 <div class="card-header text-center">
-                    <h4>Login AJAX</h4>
+                    <h4>Login</h4>
                 </div>
                 <div class="card-body">
 

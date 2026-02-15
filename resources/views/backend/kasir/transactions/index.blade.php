@@ -23,6 +23,7 @@
                             <td>{{ number_format($p->price) }}</td>
                             <td>{{ $p->stock }}</td>
                             <td>
+
                                 <button class="btn btn-sm btn-primary addCart"
                                         data-id="{{ $p->id }}"
                                         data-name="{{ $p->name }}"
@@ -31,6 +32,8 @@
                                 </button>
                             </td>
                         </tr>
+
+
                     @endforeach
                     </tbody>
                 </table>
@@ -156,6 +159,8 @@
                 let modal = new bootstrap.Modal(document.getElementById('modalTambah'));
                 modal.show();
             });
+
+            console.log('INFO ID'+product_id)
 
             $("#saveCart").click(function() {
 
